@@ -1,0 +1,56 @@
+const express = require("express");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const app = express();
+const cors = require("cors");
+const port = process.env.Port || 3000;
+
+// middleware
+app.use(cors());
+app.use(express.json());
+
+// smartDealsDB
+// xYMpryTdlpXWQmy9
+const uri =
+  "mongodb+srv://smartDealsDB:xYMpryTdlpXWQmy9@cluster0.og65bqs.mongodb.net/?appName=Cluster0";
+
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+app.get("/", (req, res) => {
+  res.send("smart deals server is running ");
+});
+
+async function run() {
+  try {
+    await client.connect();
+    // all api here
+const database = client.db("smart_db");
+const productsCollection = database.collection("products")
+
+app.post('/products',async(req,res)=>{
+    const newProducts = req.body;
+    const result = await productsCollection.insertOne(newProducts);
+    res.send (result);
+})
+
+
+
+
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!",
+    );
+  } finally {
+  }
+}
+run().catch(console.dir);
+
+app.listen(port, () => {
+  console.log(`smart deals server started on port:${3000}`);
+});
