@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const cors = require("cors");
 const port = process.env.Port || 3000;
@@ -32,12 +32,20 @@ async function run() {
 const database = client.db("smart_db");
 const productsCollection = database.collection("products")
 
+// products api here
 app.post('/products',async(req,res)=>{
     const newProducts = req.body;
     const result = await productsCollection.insertOne(newProducts);
     res.send (result);
 })
+// delete api for products
+app.delete('/products/:id',async(req,res)=>{
+  const id = req.params.id;
+  const query = {_id:new ObjectId(id)}
+  const result = await productsCollection.deleteOne(query);
+  res.send (result)
 
+})
 
 
 
