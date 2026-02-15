@@ -29,61 +29,51 @@ async function run() {
   try {
     await client.connect();
     // all api here
-const database = client.db("smart_db");
-const productsCollection = database.collection("products")
+    const database = client.db("smart_db");
+    const productsCollection = database.collection("products");
 
-// products api here
-app.post('/products',async(req,res)=>{
-    const newProducts = req.body;
-    const result = await productsCollection.insertOne(newProducts);
-    res.send (result);
+    // products api here
+    app.post("/products", async (req, res) => {
+      const newProducts = req.body;
+      const result = await productsCollection.insertOne(newProducts);
+      res.send(result);
+    });
 
+    // update api for products
+    app.patch("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedProduct = req.body;
+      const query = { _id: new ObjectId(id) };
+      const update = {
+        $set: {
+          name: updatedProduct.name,
+          price: updatedProduct.price,
+        },
+      };
+      const result = await productsCollection.updateOne(query, update);
+      res.send(result);
+    });
 
-})
-
-// update api for products
-app.patch('/products/:id',async(req,res)=>{
-  const id = req.params.id;
-  const updatedProduct = req.body;
-  const query = {_id:new ObjectId(id)}
-  const update = {
-    $set:{
-      name:updatedProduct.name,
-      price:updatedProduct.price,
-    },
-  }
-  const result = await productsCollection.updateOne(query,update);
-  res.send(result);
-})
-
-
-
-// delete api for products
-app.delete('/products/:id',async(req,res)=>{
-  const id = req.params.id;
-  const query = {_id:new ObjectId(id)}
-  const result = await productsCollection.deleteOne(query);
-  res.send (result)
-
-})
-// to get all products api
-app.get('/products',async(req,res)=>{
-const cursor = productsCollection.find();
-const result = await cursor.toArray();
-res.send(result)
-
-})
-// to get specific products api
-app.get ('/products/:id',async(req,res)=>{
-const id = req.params.id;
-const query = {_id:new ObjectId(id)};
-const result = await productsCollection.findOne(query);
-res.send(result);
-  
-})
-
-
-
+    // delete api for products
+    app.delete("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
+    });
+    // to get all products api
+    app.get("/products", async (req, res) => {
+      const cursor = productsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // to get specific products api
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productsCollection.findOne(query);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
