@@ -66,8 +66,13 @@ app.delete('/products/:id',async(req,res)=>{
   res.send (result)
 
 })
+// to get all products api
+app.get('/products',async(req,res)=>{
+const cursor = productsCollection.find();
+const result = await cursor.toArray();
+res.send(result)
 
-
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
