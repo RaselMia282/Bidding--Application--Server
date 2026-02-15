@@ -37,7 +37,27 @@ app.post('/products',async(req,res)=>{
     const newProducts = req.body;
     const result = await productsCollection.insertOne(newProducts);
     res.send (result);
+
+
 })
+
+// update api for products
+app.patch('/products/:id',async(req,res)=>{
+  const id = req.params.id;
+  const updatedProduct = req.body;
+  const query = {_id:new ObjectId(id)}
+  const update = {
+    $set:{
+      name:updatedProduct.name,
+      price:updatedProduct.price,
+    },
+  }
+  const result = await productsCollection.updateOne(query,update);
+  res.send(result);
+})
+
+
+
 // delete api for products
 app.delete('/products/:id',async(req,res)=>{
   const id = req.params.id;
