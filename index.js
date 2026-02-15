@@ -96,5 +96,5 @@ res.send(result);
 run().catch(console.dir);
 
 app.listen(port, () => {
-  console.log(`smart deals server started on port:${3000}`);
+  console.log(`smart deals server started on port:${port}`);
 });
